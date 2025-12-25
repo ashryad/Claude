@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Sidebar from "@/components/Sidebar";
 import MarkdownEditor from "@/components/MarkdownEditor";
-import { JournalEntry } from "@/lib/types";
+import { JournalEntry, DEFAULT_COLOR } from "@/lib/types";
 import { storage } from "@/lib/storage";
 
 export default function Home() {
@@ -11,6 +11,7 @@ export default function Home() {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
+  const [color, setColor] = useState(DEFAULT_COLOR);
   const [isNewEntry, setIsNewEntry] = useState(false);
 
   useEffect(() => {
@@ -20,6 +21,7 @@ export default function Home() {
       setSelectedId(loadedEntries[0].id);
       setTitle(loadedEntries[0].title);
       setContent(loadedEntries[0].content);
+      setColor(loadedEntries[0].color);
     }
   }, []);
 
@@ -29,6 +31,7 @@ export default function Home() {
       setSelectedId(id);
       setTitle(entry.title);
       setContent(entry.content);
+      setColor(entry.color);
       setIsNewEntry(false);
     }
   };
@@ -37,7 +40,17 @@ export default function Home() {
     setSelectedId(null);
     setTitle("");
     setContent("");
+    setColor(DEFAULT_COLOR);
     setIsNewEntry(true);
+  };
+
+  const handleColorChange = (newColor: string) => {
+    setColor(newColor);
+    if (selectedId) {
+      storage.updateEntryColor(selectedId, newColor);
+      const updatedEntries = storage.getEntries();
+      setEntries(updatedEntries);
+    }
   };
 
   const handleSave = () => {
@@ -90,8 +103,10 @@ export default function Home() {
       <MarkdownEditor
         title={title}
         content={content}
+        color={color}
         onTitleChange={setTitle}
         onContentChange={setContent}
+        onColorChange={handleColorChange}
         onSave={handleSave}
       />
     </div>

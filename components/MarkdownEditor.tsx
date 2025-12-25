@@ -1,20 +1,25 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import ColorPicker from "./ColorPicker";
 
 interface MarkdownEditorProps {
   title: string;
   content: string;
+  color: string;
   onTitleChange: (title: string) => void;
   onContentChange: (content: string) => void;
+  onColorChange: (color: string) => void;
   onSave: () => void;
 }
 
 export default function MarkdownEditor({
   title,
   content,
+  color,
   onTitleChange,
   onContentChange,
+  onColorChange,
   onSave,
 }: MarkdownEditorProps) {
   const [showPreview, setShowPreview] = useState(false);
@@ -65,27 +70,35 @@ export default function MarkdownEditor({
 
   return (
     <div className="flex-1 flex flex-col h-screen bg-white dark:bg-slate-950">
-      <div className="border-b border-slate-200 dark:border-slate-800 p-4 flex items-center justify-between">
-        <input
-          type="text"
-          value={title}
-          onChange={(e) => onTitleChange(e.target.value)}
-          placeholder="Entry title..."
-          className="text-3xl font-bold bg-transparent border-none outline-none flex-1 text-slate-900 dark:text-slate-100 placeholder-slate-400"
-        />
-        <div className="flex items-center gap-2">
-          <button
-            onClick={() => setShowPreview(!showPreview)}
-            className="px-4 py-2 text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors"
-          >
-            {showPreview ? "Edit" : "Preview"}
-          </button>
-          <button
-            onClick={onSave}
-            className="px-4 py-2 text-sm font-medium bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
-          >
-            Save
-          </button>
+      <div className="border-b border-slate-200 dark:border-slate-800 p-4">
+        <div className="flex items-center justify-between mb-4">
+          <input
+            type="text"
+            value={title}
+            onChange={(e) => onTitleChange(e.target.value)}
+            placeholder="Entry title..."
+            className="text-3xl font-bold bg-transparent border-none outline-none flex-1 text-slate-900 dark:text-slate-100 placeholder-slate-400"
+          />
+          <div className="flex items-center gap-2 ml-4">
+            <button
+              onClick={() => setShowPreview(!showPreview)}
+              className="px-4 py-2 text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors"
+            >
+              {showPreview ? "Edit" : "Preview"}
+            </button>
+            <button
+              onClick={onSave}
+              className="px-4 py-2 text-sm font-medium bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
+            >
+              Save
+            </button>
+          </div>
+        </div>
+        <div className="flex items-center gap-3">
+          <span className="text-sm font-medium text-slate-600 dark:text-slate-400">
+            Color:
+          </span>
+          <ColorPicker selectedColor={color} onColorChange={onColorChange} />
         </div>
       </div>
 

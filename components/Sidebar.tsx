@@ -1,6 +1,6 @@
 "use client";
 
-import { JournalEntry } from "@/lib/types";
+import { JournalEntry, ENTRY_COLORS } from "@/lib/types";
 
 interface SidebarProps {
   entries: JournalEntry[];
@@ -42,6 +42,10 @@ export default function Sidebar({
     }
   };
 
+  const getColorClass = (colorName: string) => {
+    return ENTRY_COLORS.find((c) => c.name === colorName)?.dot || "bg-blue-500";
+  };
+
   return (
     <div className="w-80 bg-slate-50 dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col h-screen">
       <div className="p-4 border-b border-slate-200 dark:border-slate-800">
@@ -73,9 +77,12 @@ export default function Sidebar({
                 }`}
                 onClick={() => onSelect(entry.id)}
               >
-                <h3 className="font-medium text-slate-900 dark:text-slate-100 truncate pr-8">
-                  {entry.title || "Untitled"}
-                </h3>
+                <div className="flex items-center gap-2 mb-1">
+                  <div className={`h-3 w-3 rounded-full flex-shrink-0 ${getColorClass(entry.color)}`} />
+                  <h3 className="font-medium text-slate-900 dark:text-slate-100 truncate pr-8 flex-1">
+                    {entry.title || "Untitled"}
+                  </h3>
+                </div>
                 <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
                   {formatDate(entry.updatedAt)}
                 </p>
